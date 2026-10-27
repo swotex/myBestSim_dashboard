@@ -85,6 +85,26 @@ export function useStats() {
       : null,
   )
 
+  const providerStats = computed(() => {
+    const m = new Map<string, { offers: number; prices: number[]; perGb: number[] }>()
+    for (const p of products.value) {
+      const e = m.get(p.provider) ?? { offers: 0, prices: [], perGb: [] }
+      e.offers++
+      if (Number.isFinite(p.price)) {
+        e.prices.push(p.price)
+        if (p.data_gb > 0) e.perGb.push(p.price / p.data_gb)
+      }
+      m.set(p.provider, e)
+    }
+    const avg = (a: number[]) => (a.length ? sum(a) / a.length : NaN)
+    return [...m].map(([name, e]) => ({
+      name,
+      offers: e.offers,
+      price: avg(e.prices),
+      perGb: avg(e.perGb),
+    }))
+  })
+
   return {
     stats,
     byProvider,
@@ -93,5 +113,6 @@ export function useStats() {
     byValidity,
     avgPriceByProvider,
     bestValue,
+    providerStats,
   }
 }
