@@ -9,9 +9,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
-    tailwindcss(),
   ],
+  base: '/myBestSim_dashboard/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
