@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { Card } from '@/components/ui/card'
 import { useStats } from '@/composables/useStats'
 
-const { stats } = useStats()
+const { stats, bestValue } = useStats()
 
 const eur = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
 const num = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 })
@@ -21,6 +21,11 @@ const kpis = computed(() => {
     },
     { label: 'Prix moyen', value: eur.format(s.avgPrice), sub: 'tous fournisseurs confondus' },
     { label: 'Data moyenne', value: `${num.format(s.avgGb)} Go`, sub: 'par carte' },
+    {
+      label: 'Meilleur rapport qualité/prix',
+      value: bestValue.value ? bestValue.value.label : '—',
+      sub: bestValue.value ? `${eur.format(bestValue.value.value)} / Go en moyenne` : 'données insuffisantes',
+    },
   ]
 })
 </script>

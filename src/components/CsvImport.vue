@@ -55,7 +55,7 @@ function onPick(e: Event) {
             <Button
               variant="ghost"
               size="icon"
-              class="size-6 rounded-full"
+              class="size-6 rounded-full text-red-900 hover:text-red-600"
               :aria-label="`Retirer ${f.name}`"
               @click="removeFile(f.name)"
             >

@@ -56,10 +56,42 @@ export function useStats() {
     }))
   })
 
+  const byValidity = computed(() => {
+    const m = new Map<number, number>()
+    for (const p of products.value) {
+      if (!Number.isFinite(p.validity_days)) continue
+      m.set(p.validity_days, (m.get(p.validity_days) ?? 0) + 1)
+    }
+    return [...m]
+      .sort((a, b) => a[0] - b[0])
+      .map(([d, value]) => ({ label: `${d} j`, value }))
+  })
+
+  const avgPriceByProvider = computed(() => {
+    const m = new Map<string, number[]>()
+    for (const p of products.value) {
+      if (!Number.isFinite(p.price)) continue
+      m.set(p.provider, [...(m.get(p.provider) ?? []), p.price])
+    }
+    return [...m].map(([label, v]) => ({
+      label,
+      value: Math.round((sum(v) / v.length) * 100) / 100,
+    }))
+  })
+
+  const bestValue = computed(() =>
+    pricePerGb.value.length
+      ? pricePerGb.value.reduce((a, b) => (b.value < a.value ? b : a))
+      : null,
+  )
+
   return {
     stats,
     byProvider,
     priceBuckets,
-    pricePerGb
+    pricePerGb,
+    byValidity,
+    avgPriceByProvider,
+    bestValue,
   }
 }
